@@ -3,21 +3,27 @@ package bot
 import (
 	"log"
 
+	"Spendly-bot/internal/config/expenses"
+
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
 type Bot struct {
-	api *tgbotapi.BotAPI
+	api            *tgbotapi.BotAPI
+	expenseService *expenses.Service
+	userStates     map[int64]string
 }
 
-func New(token string) (*Bot, error) {
+func New(token string, expenseService *expenses.Service) (*Bot, error) {
 	api, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
 		return nil, err
 	}
 
 	return &Bot{
-		api: api,
+		api:            api,
+		expenseService: expenseService,
+		userStates:     make(map[int64]string),
 	}, nil
 }
 
