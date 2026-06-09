@@ -5,6 +5,7 @@ import (
 
 	"Spendly-bot/internal/bot"
 	"Spendly-bot/internal/config"
+	"Spendly-bot/internal/config/expenses"
 )
 
 func main() {
@@ -14,7 +15,9 @@ func main() {
 		log.Fatal("BOT_TOKEN is empty")
 	}
 
-	telegramBot, err := bot.New(cfg.BotToken)
+	expensesService := expenses.NewService()
+
+	telegramBot, err := bot.New(cfg.BotToken, expensesService)
 	if err != nil {
 		log.Fatal(err)
 	}
