@@ -144,6 +144,18 @@ func (b *Bot) handleExpenseInput(chatID int64, text string) {
 		)
 		return
 	}
+	if err := b.expenseService.SaveParsedExpenses(chatID, parsedExpenses); err != nil {
+		log.Println("save expenses error:", err)
+
+		b.sendTextWithKeyboard(
+			chatID,
+			"Ошибка при сохранении расходов 😅\nПопробуй ещё раз.",
+			mainMenuKeyboard(),
+		)
+
+		b.userStates[chatID] = ""
+		return
+	}
 
 	var total float64
 	response := "✅ Распознал расходы:\n\n"
@@ -161,7 +173,7 @@ func (b *Bot) handleExpenseInput(chatID int64, text string) {
 	}
 
 	response += fmt.Sprintf("\n💰 Итого: %.2f MDL", total)
-	response += "\n\nПока я только распознаю расходы. Следующим этапом начну сохранять их в базу."
+	response += "\n\n💾 Расходы сохранены в базу."
 
 	b.userStates[chatID] = ""
 

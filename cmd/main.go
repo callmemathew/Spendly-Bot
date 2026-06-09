@@ -3,9 +3,12 @@ package main
 import (
 	"log"
 
+	_ "github.com/mattn/go-sqlite3"
+
 	"Spendly-bot/internal/bot"
 	"Spendly-bot/internal/config"
 	"Spendly-bot/internal/config/expenses"
+	"Spendly-bot/internal/config/storage"
 )
 
 func main() {
@@ -15,7 +18,15 @@ func main() {
 		log.Fatal("BOT_TOKEN is empty")
 	}
 
-	expensesService := expenses.NewService()
+	db, err := storage.NewSQLiteStorage("spendly.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	log.Println("Sqlite vse chetko!")
+
+	expensesService := expenses.NewService(db)
 
 	telegramBot, err := bot.New(cfg.BotToken, expensesService)
 	if err != nil {

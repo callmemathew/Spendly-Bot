@@ -28,7 +28,7 @@ func New(token string, expenseService *expenses.Service) (*Bot, error) {
 }
 
 func (b *Bot) Run() error {
-	log.Printf("Spendly bot started: @%s", b.api.Self.UserName)
+	log.Println("Твой ботяра:", b.api.Self.UserName, "запущен")
 
 	updateConfig := tgbotapi.NewUpdate(0)
 	updateConfig.Timeout = 60
